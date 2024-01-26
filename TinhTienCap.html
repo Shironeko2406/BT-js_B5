@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính Cước Cáp Cho Công Ty Cáp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            /* Chọn cả thẻ select để áp dụng CSS giống với input */
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Tính Cước Cáp Cho Công Ty Cáp</h2>
+        <label for="customerCode">Mã Khách Hàng:</label>
+        <input type="text" id="customerCode" placeholder="Nhập mã khách hàng">
+
+        <label for="customerType">Loại Khách Hàng:</label>
+        <select id="customerType" onchange="toggleConnectionInput()">
+            <option value="" disabled selected>Chọn loại hình</option>
+            <option value="residential">Hộ Gia Đình</option>
+            <option value="business">Doanh Nghiệp</option>
+        </select>
+
+        <label for="connectionNumber" id="connectionNumberLabel" style="display:none;">Số Lượng Kết Nối:</label>
+        <input type="number" id="connectionNumber" placeholder="Nhập số lượng kết nối" style="display:none;">
+
+        <label for="premiumChannels">Kênh Cao Cấp:</label>
+        <input type="number" id="premiumChannels" placeholder="Nhập số lượng kênh cao cấp">
+
+        <button onclick="calculateBill()">Tính Cước</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function toggleConnectionInput() {
+            var customerType = document.getElementById('customerType').value;
+            var connectionInput = document.getElementById('connectionNumber');
+            var connectionLabel = document.getElementById('connectionNumberLabel');
+
+            // Hiển thị hoặc ẩn ô nhập số lượng kết nối dựa trên loại khách hàng
+            if (customerType === 'business') {
+                connectionInput.style.display = 'block';
+                connectionLabel.style.display = 'block';
+            } else {
+                connectionInput.style.display = 'none';
+                connectionLabel.style.display = 'none';
+            }
+        }
+
+        function calculateBill() {
+            var customerCode = document.getElementById('customerCode').value;
+            var customerType = document.getElementById('customerType').value;
+            var connectionNumber = parseInt(document.getElementById('connectionNumber').value) || 0;
+            var premiumChannels = parseInt(document.getElementById('premiumChannels').value) || 0;
+
+            var invoiceProcessingFee, basicServiceFee, premiumChannelRental;
+
+            if (customerType === 'residential') {
+                invoiceProcessingFee = 4.5;
+                basicServiceFee = 20.5;
+                premiumChannelRental = 7.5 * premiumChannels;
+            } else {
+                invoiceProcessingFee = 15;
+                basicServiceFee = 75 + (connectionNumber > 10 ? (connectionNumber - 10) * 5 : 0);
+                premiumChannelRental = 50 * premiumChannels;
+            }
+
+            var totalBill = invoiceProcessingFee + basicServiceFee + premiumChannelRental;
+
+            var resultMessage = `Mã Khách Hàng: ${customerCode}<br>`;
+            resultMessage += `Tổng Cước: $${totalBill.toFixed(2)}`;
+
+            document.getElementById('result').innerHTML = resultMessage;
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính Tiền Điện</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Tính Tiền Điện</h2>
+        <label for="ten">Tên:</label>
+        <input type="text" id="ten" placeholder="Nhập tên">
+
+        <label for="soKw">Số Kw:</label>
+        <input type="number" id="soKw" placeholder="Nhập số Kw">
+
+        <button onclick="tinhTienDien()">Tính Tiền</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function tinhTienDien() {
+            var ten = document.getElementById('ten').value;
+            var soKw = parseFloat(document.getElementById('soKw').value);
+            var tien;
+
+            if (soKw <= 50) {
+                tien = soKw * 500;
+            } else if (soKw <= 100) {
+                tien = 50 * 500 + (soKw - 50) * 650;
+            } else if (soKw <= 200) {
+                tien = 50 * 500 + 50 * 650 + (soKw - 100) * 850;
+            } else if (soKw <= 350) {
+                tien = 50 * 500 + 50 * 650 + 100 * 850 + (soKw - 200) * 1100;
+            } else {
+                tien = 50 * 500 + 50 * 650 + 100 * 850 + 150 * 1100 + (soKw - 350) * 1300;
+            }
+
+            document.getElementById('result').innerHTML = "Xin chào, " + ten + "! Tiền điện của bạn là: " + tien + "đ";
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết Quả Kỳ Thi Đầu Vào</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: calc(100% - 16px);
+            /* Adjusted width to accommodate error messages */
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Quản Lý Tuyển Sinh</h2>
+
+        <label for="standardScore">
+            Điểm Chuẩn:
+            <input type="number" id="standardScore" placeholder="Nhập điểm chuẩn">
+            <span id="standardScoreError" class="error-message"></span>
+        </label>
+
+        <label for="examScore1">
+            Điểm Môn Thi 1:
+            <input type="number" id="examScore1" placeholder="Nhập điểm môn thi 1">
+            <span id="examScore1Error" class="error-message"></span>
+        </label>
+
+        <label for="examScore2">
+            Điểm Môn Thi 2:
+            <input type="number" id="examScore2" placeholder="Nhập điểm môn thi 2">
+            <span id="examScore2Error" class="error-message"></span>
+        </label>
+
+        <label for="examScore3">
+            Điểm Môn Thi 3:
+            <input type="number" id="examScore3" placeholder="Nhập điểm môn thi 3">
+            <span id="examScore3Error" class="error-message"></span>
+        </label>
+
+        <label for="region">
+            Khu Vực:
+            <select id="region">
+                <option value="" selected disabled>Chọn khu vực</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+            <span id="regionError" class="error-message"></span>
+        </label>
+
+        <label for="testTaker">
+            Đối Tượng:
+            <select id="testTaker">
+                <option value="" selected disabled>Chọn đối tượng</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+            <span id="testTakerError" class="error-message"></span>
+        </label>
+
+        <button onclick="calculateResult()">Kiểm Tra Kết Quả</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateResult() {
+            // Reset error messages
+            clearErrorMessages();
+
+            // Get input values
+            var standardScore = parseFloat(document.getElementById('standardScore').value) || 0;
+            var examScore1 = parseFloat(document.getElementById('examScore1').value) || 0;
+            var examScore2 = parseFloat(document.getElementById('examScore2').value) || 0;
+            var examScore3 = parseFloat(document.getElementById('examScore3').value) || 0;
+            var region = document.getElementById('region').value;
+            var testTaker = parseFloat(document.getElementById('testTaker').value) || 0;
+
+            // Check for empty fields
+            if (isNaN(standardScore) || standardScore === 0) {
+                displayErrorMessage('standardScoreError', 'Nhập điểm chuẩn');
+            }
+            if (isNaN(examScore1) || examScore1 === 0) {
+                displayErrorMessage('examScore1Error', 'Nhập điểm môn thi 1');
+            }
+            if (isNaN(examScore2) || examScore2 === 0) {
+                displayErrorMessage('examScore2Error', 'Nhập điểm môn thi 2');
+            }
+            if (isNaN(examScore3) || examScore3 === 0) {
+                displayErrorMessage('examScore3Error', 'Nhập điểm môn thi 3');
+            }
+            if (region === '') {
+                displayErrorMessage('regionError', 'Chọn khu vực');
+            }
+            if (isNaN(testTaker) || testTaker === 0) {
+                displayErrorMessage('testTakerError', 'Chọn đối tượng');
+            }
+
+            // Stop further processing if there are errors
+            if (document.querySelectorAll('.error-message').length > 0) {
+                return;
+            }
+
+            // Calculate and display result as before
+            var totalScore = examScore1 + examScore2 + examScore3;
+            var regionPoints = (region === 'A') ? 2 : (region === 'B') ? 1 : (region === 'C') ? 0.5 : 0;
+            var objectPoints = (testTaker === 1) ? 2.5 : (testTaker === 2) ? 1.5 : (testTaker === 3) ? 1 : 0;
+            var priorityPoints = regionPoints + objectPoints;
+            var finalScore = totalScore + priorityPoints;
+
+            var resultMessage = `Tổng Điểm: ${totalScore}<br>`;
+            resultMessage += `Điểm Ưu Tiên: ${priorityPoints}<br>`;
+            resultMessage += `Điểm Cuối Cùng: ${finalScore}<br>`;
+
+            if (finalScore >= standardScore && examScore1 !== 0 && examScore2 !== 0 && examScore3 !== 0) {
+                resultMessage += 'Kết Quả: Đậu';
+            } else {
+                resultMessage += 'Kết Quả: Rớt';
+            }
+
+            document.getElementById('result').innerHTML = resultMessage;
+        }
+
+        function displayErrorMessage(elementId, message) {
+            var errorMessageElement = document.getElementById(elementId);
+            errorMessageElement.innerHTML = message;
+            errorMessageElement.classList.add('error-message');
+        }
+
+        function clearErrorMessages() {
+            var errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(function (element) {
+                element.innerHTML = '';
+                element.classList.remove('error-message');
+            });
+        }
+    </script>
+
+</body>
+
+</html>
